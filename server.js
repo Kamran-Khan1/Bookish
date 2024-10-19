@@ -3,8 +3,10 @@ import env from "dotenv";
 import { fileURLToPath } from "url";
 import { dirname } from "node:path";
 import expressEjsLayouts from "express-ejs-layouts";
-import router from "./controllers/index.js";
+import bodyParser from "body-parser";
 const app = express();
+
+app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
 env.config({
   path: "./.env",
@@ -19,7 +21,10 @@ app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.set("layout", "layouts/layout");
 
-app.use("/", router);
+import userRouter from "./controllers/index.js";
+import authorRouter from "./controllers/authors.js";
+app.use("/", userRouter); //The link is localhost:5000/authors/ -> We are making get request here👌
+app.use("/authors", authorRouter); //The link is localhost:5000/authors/new -> We are making get request here👌
 
 import mongoose from "mongoose";
 
